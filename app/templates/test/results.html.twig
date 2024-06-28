@@ -1,0 +1,38 @@
+{# templates/test/results.html.twig #}
+
+<h1>Test Results</h1>
+
+{% if sessionResults is not empty %}
+    {% for questionId, questionData in sessionResults %}
+        <h2>Question: {{ questionData.text }}
+            -
+            {% if questionData.isCorrect %}
+                Correct
+            {% else %}
+                Incorrect
+            {% endif %}
+        </h2>
+        {% if questionData.answers is defined %}
+            <ul>
+                {% for answerId, answerData in questionData.answers %}
+                    <li>
+                        <strong>Answer: {{ answerData.text }}</strong> -
+                        {% if answerData.isCorrect %}
+                            Correct
+                        {% else %}
+                            Incorrect
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No answers provided for this question.</p>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+<form action="{{ path('random_test') }}" method="get">
+    <button type="submit">Пройти случайный тест ещё раз</button>
+</form>

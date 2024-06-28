@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./build/php/Dockerfile
+    volumes:
+      - ./app:/var/www
+      - ./app/var/cache:/var/www/var/cache:delegated
+    ports:
+      - "9001:9000"
+    depends_on:
+      - db
+    environment:
+      - ENVIRONMENT=local
+      - PHP_IDE_CONFIG=serverName=test-project
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./build/nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www
+    depends_on:
+      - app
+
+  db:
+    image: postgres:14
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+
+volumes:
+  db-data:
+  nginx_logs:

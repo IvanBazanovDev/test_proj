@@ -1,0 +1,21 @@
+{# templates/test/show.html.twig #}
+
+<h1>{{ test.title }}</h1>
+
+<form action="{{ path('test_submit', { 'id': test.id }) }}" method="post">
+    {% set randomQuestions = test.getRandomQuestions() %}
+    {% for question in randomQuestions %}
+        <h2>{{ question.text }}</h2>
+        <ul>
+            {% set randomAnswers = question.getRandomAnswers() %}
+            {% for answer in randomAnswers %}
+                <li>
+                    <input type="checkbox" name="answers[{{ question.id }}][answers][{{ answer.id }}]" value="{{ answer.text }}">
+                    {{ answer.text }}
+                    <input type="hidden" name="answers[{{ question.id }}][text]" value="{{ question.text }}">
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+    <button type="submit">Submit</button>
+</form>
